@@ -1,4 +1,4 @@
-import { Component, output } from '@angular/core';
+import { Component } from '@angular/core';
 import { Menu } from './menu/menu';
 import { Product } from './product/product-types';
 import { Productcard } from './product/productcard';
@@ -13,7 +13,6 @@ export class App {
   title = 'my first component';
 
   total = 0;
-
 
   addToBasket(product: Product) {
     this.total += product.price;

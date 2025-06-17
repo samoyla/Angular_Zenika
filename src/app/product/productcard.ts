@@ -12,7 +12,7 @@ export class Productcard {
 
   addToBasket = output<Product>();
 
-  onClick() {
+  /*onClick() {
     this.addToBasket.emit(this.product());
-  }
+  }*/
 }
