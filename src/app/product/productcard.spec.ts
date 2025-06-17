@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { Productcard } from './productcard';
 import { Product } from './product-types';
+import { Productcard } from './productcard';
 
 fdescribe('Productcard', () => {
   let component: Productcard;

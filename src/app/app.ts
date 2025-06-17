@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
+import { HighlightPrice } from './highlight-price/highlight-price';
 import { Menu } from './menu/menu';
 import { Product } from './product/product-types';
 import { Productcard } from './product/productcard';
@@ -7,18 +8,28 @@ import { Productcard } from './product/productcard';
   selector: 'app-root',
   templateUrl: './app.html',
   styleUrl: './app.css',
-  imports: [Menu, Productcard],
+  imports: [Menu, Productcard, HighlightPrice],
 })
 export class App {
   title = 'my first component';
 
-  total = 0;
+  total = signal<number>(0);
 
-  addToBasket(product: Product) {
-    this.total += product.price;
+  addToBasket({ id, price }: Product) {
+    this.products.update((products) =>
+      products.map((product) => {
+        if (product.id === id) {
+          return { ...product, stock: product.stock - 1 };
+        }
+        return product;
+      }),
+    );
+
+    this.total.update((total) => total + price);
   }
 
-  products: Product[] = [
+  //products: Product[] = [
+  products = signal<Product[]>([
     {
       id: 'welsch',
       title: 'Coding the welsch',
@@ -51,5 +62,7 @@ export class App {
       price: 19,
       stock: 2,
     },
-  ];
+  ]);
+
+  productsInStock = computed<Product[]>(() => this.products().filter(({ stock }) => stock > 0));
 }
