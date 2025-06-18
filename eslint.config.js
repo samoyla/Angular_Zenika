@@ -41,7 +41,7 @@ module.exports = tseslint.config(
   eslintPluginPrettierRecommended,
   {
     rules: {
-      'prettier/prettier': 'warn',
+      'prettier/prettier': 'off',
     },
   },
 );

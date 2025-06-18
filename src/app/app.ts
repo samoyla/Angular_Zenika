@@ -1,8 +1,11 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, inject} from '@angular/core';
 import { HighlightPrice } from './highlight-price/highlight-price';
 import { Menu } from './menu/menu';
 import { Product } from './product/product-types';
 import { Productcard } from './product/productcard';
+import { CatalogResource } from './catalog/catalog-resource';
+import { BasketResource } from './basket/basket-resource';
+import { BasketItem } from './basket/basket-types';
 
 @Component({
   selector: 'app-root',
@@ -11,58 +14,22 @@ import { Productcard } from './product/productcard';
   imports: [Menu, Productcard, HighlightPrice],
 })
 export class App {
-  title = 'my first component';
 
-  total = signal<number>(0);
+  private catalogService = inject(CatalogResource);
 
-  addToBasket({ id, price }: Product) {
-    this.products.update((products) =>
-      products.map((product) => {
-        if (product.id === id) {
-          return { ...product, stock: product.stock - 1 };
-        }
-        return product;
-      }),
-    );
+  private basketService = inject(BasketResource);
 
-    this.total.update((total) => total + price);
+  productsInStock = this.catalogService.productsInStock;
+  total = this.basketService.total;
+
+ /* addToBasket({ id, price, title }: Product) {
+    this.basketService.addItem({id, title, price});
+    this.catalogService.decreaseStock(id);
+  }*/
+
+  addToBasket(product: Product) {
+    this.basketService.addItem(product as BasketItem);
+    this.catalogService.decreaseStock(product);
   }
 
-  //products: Product[] = [
-  products = signal<Product[]>([
-    {
-      id: 'welsch',
-      title: 'Coding the welsch',
-      description: 'Tee-shirt col rond - Homme',
-      photo: '/assets/coding-the-welsch.jpg',
-      price: 20,
-      stock: 2,
-    },
-    {
-      id: 'world',
-      title: 'Coding the world',
-      description: 'Tee-shirt col rond - Homme',
-      photo: '/assets/coding-the-world.jpg',
-      price: 18,
-      stock: 1,
-    },
-    {
-      id: 'vador',
-      title: 'Duck Vador',
-      description: 'Tee-shirt col rond - Femme',
-      photo: '/assets/coding-the-stars.jpg',
-      price: 21,
-      stock: 2,
-    },
-    {
-      id: 'snow',
-      title: 'Coding the snow',
-      description: 'Tee-shirt col rond - Femme',
-      photo: '/assets/coding-the-snow.jpg',
-      price: 19,
-      stock: 2,
-    },
-  ]);
-
-  productsInStock = computed<Product[]>(() => this.products().filter(({ stock }) => stock > 0));
 }
